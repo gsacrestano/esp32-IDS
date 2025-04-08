@@ -1,16 +1,23 @@
+#include <WiFi.h>
+#include <ArduinoJson.h>
 #include <aifes.h>
+
 #include "FNN_utility.h"
+#include "WiFi_utility.h"
+
 
 void setup() {
   Serial.begin(115200);
-  create_fnn();
+
+  setup_WiFi();
+  train_fnn();
+
   delay(500);
 }
-
 void loop() {
   delay(10000);
 }
-void create_fnn() {
+void train_fnn() {
   Serial.println("Start training: ");
 
   AIFES_E_activations FNN_activations[FNN_LAYERS - 1];
@@ -18,10 +25,11 @@ void create_fnn() {
   FNN_activations[1] = AIfES_E_relu;     //AIfES_E_relu activation for second hidden (dense) layer
   FNN_activations[2] = AIfES_E_sigmoid;  //AIfES_E_sigmoid activation for output (dense) layer
 
-  uint32_t weight_number = AIFES_E_flat_weights_number_fnn_f32(FNN_structure, FNN_LAYERS);
+  uint16_t weight_number = AIFES_E_flat_weights_number_fnn_f32(FNN_structure, FNN_LAYERS);
   Serial.print(F("Weights: "));
   Serial.println(weight_number);
   float FlatWeights[weight_number];
+  
 
   AIFES_E_model_parameter_fnn_f32 FNN;
   FNN.layer_count = FNN_LAYERS;
@@ -71,4 +79,8 @@ void create_fnn() {
   error = AIFES_E_inference_fnn_f32(&input_tensor, &FNN, &output_tensor);
   error_handling_inference(error);
   printResult_trainingData(trainY, output_data);
+
+  swap_weights(weight_number , FlatWeights);
+
+
 }
