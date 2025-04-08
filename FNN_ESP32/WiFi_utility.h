@@ -3,8 +3,8 @@
 #include <WiFi.h>
 
   //-----Wi-Fi configuration-----
-  const char* ssid = "TIM-32726474";
-  const char* password = "PP3hTsb3fzbkEKeD2kK4A5SE";
+  const char* ssid = "ssid";
+  const char* password = "password";
   const uint16_t port = 80;
 
   IPAddress apIP(192,168,1,184);
