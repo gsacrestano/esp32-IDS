@@ -1285,49 +1285,8 @@ void printResult_testData(float testY[TEST_DATASET] , float output_data[TEST_DAT
     Serial.print(output_data[i]);
   }
   Serial.print("])");
-
-
-
-  Serial.println("");
-  Serial.print("y_train = [");
-  Serial.print(trainY[0]);
-  for(uint16_t i = 1 ; i < DATASETS; i++){
-    Serial.print(",");
-    Serial.print(trainY[i]);
-  }
-  Serial.print("]");
-
-  Serial.println("");
-  Serial.print("y_train_pred = np.array([");
-  Serial.print(output_data[0]);
-  for(uint16_t i = 1 ; i < DATASETS; i++){
-    Serial.print(",");
-    Serial.print(output_data[i]);
-  }
-  Serial.print("])");
-
 }
-void printResult_trainingData(float trainY[TEST_DATASET] , float output_data[TEST_DATASET]){ 
-  Serial.println("");
-  Serial.print("y_test = [");
-  Serial.print(testY[0]);
-  for(uint8_t i = 1 ; i < TEST_DATASET; i++){
-    Serial.print(",");
-    Serial.print(testY[i]);
-  }
-  Serial.print("]");
-
-  Serial.println("");
-  Serial.print("y_test_pred = np.array([");
-  Serial.print(output_data[0]);
-  for(uint8_t i = 1 ; i < TEST_DATASET; i++){
-    Serial.print(",");
-    Serial.print(output_data[i]);
-  }
-  Serial.print("])");
-
-
-
+void printResult_trainingData(float trainY[DATASETS] , float output_data[DATASETS]){ 
   Serial.println("");
   Serial.print("y_train = [");
   Serial.print(trainY[0]);

@@ -2,14 +2,15 @@
 #include <ArduinoJson.h>
 #include <aifes.h>
 
-#include "FNN_utility.h"
-#include "WiFi_utility.h"
+#include "../FNN_utility.h"
+#include "../WiFi_utility.h"
 
 
 void setup() {
   Serial.begin(115200);
 
-  setup_WiFi();
+
+  setup_WiFi_server();
   train_fnn();
 
   delay(500);
@@ -18,7 +19,7 @@ void loop() {
   delay(10000);
 }
 void train_fnn() {
-  Serial.println("Start training: ");
+  Serial.println("\n\nStart training: ");
 
   AIFES_E_activations FNN_activations[FNN_LAYERS - 1];
   FNN_activations[0] = AIfES_E_relu;     //AIfES_E_relu activation for first hidden (dense) layer
@@ -29,7 +30,7 @@ void train_fnn() {
   Serial.print(F("Weights: "));
   Serial.println(weight_number);
   float FlatWeights[weight_number];
-  
+
 
   AIFES_E_model_parameter_fnn_f32 FNN;
   FNN.layer_count = FNN_LAYERS;
@@ -48,7 +49,7 @@ void train_fnn() {
   FNN_TRAIN.sgd_momentum = 0.0;  //Not using sgd
   FNN_TRAIN.batch_size = 64;
   FNN_TRAIN.epochs = 500;
-  FNN_TRAIN.epochs_loss_print_interval = 10;
+  FNN_TRAIN.epochs_loss_print_interval = 100;
 
   FNN_TRAIN.loss_print_function = printLoss;
   FNN_TRAIN.early_stopping = AIfES_E_early_stopping_on;
@@ -65,12 +66,12 @@ void train_fnn() {
   Serial.println("Training end");
 
   // -------------------------------- do the inference ----------------------------------
-  
+
   //Inference on test data
   output_shape[0] = TEST_DATASET;
   output_tensor = AITENSOR_2D_F32(output_shape, output_data);
   error = AIFES_E_inference_fnn_f32(&test_input_tensor, &FNN, &output_tensor);
-  error_handling_inference(error); 
+  error_handling_inference(error);
   printResult_testData(testY, output_data);
 
   //Inference on train data
@@ -80,7 +81,10 @@ void train_fnn() {
   error_handling_inference(error);
   printResult_trainingData(trainY, output_data);
 
-  swap_weights(weight_number , FlatWeights);
-
-
+  while (syncWeights_server(weight_number, FlatWeights) != 1)
+  {
+    Serial.println("Wait Client");
+    delay(10000);
+  }
+  Serial.print("\nCode ended on server");
 }
