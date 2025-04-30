@@ -1,12 +1,6 @@
-#include <aifes.h>
+#include "FNN_utility.h"
 
-
-#define FNN_LAYERS 4
-#define DATASETS 1024
-#define TEST_DATASET 126
-#define FEATURES 15
-
-  //-----FNN configuration-----
+//-----FNN configuration-----
 
   //FNN Structure with 15 neurons of input, two dense layer of 16 neurons each, an output layer with a single neuron
   uint32_t FNN_structure[FNN_LAYERS] = { FEATURES, 16, 16, 1 };
@@ -1188,6 +1182,7 @@
   aitensor_t output_tensor = AITENSOR_2D_F32(output_shape, output_data);
 
 
+
 void printLoss(float loss) {
   if (!isnan(loss)) {
     Serial.print(F("Loss: "));
@@ -1267,7 +1262,7 @@ void error_handling_inference(int8_t error_nr) {
       Serial.println(F("Unknown error"));
   }
 }
-void printResult_testData(float testY[TEST_DATASET] , float output_data[TEST_DATASET]){ 
+void printResult_testData(float testY[TEST_DATASET] , float output_data[TEST_DATASET]){
   Serial.println("");
   Serial.print("y_test = [");
   Serial.print(testY[0]);
@@ -1286,7 +1281,7 @@ void printResult_testData(float testY[TEST_DATASET] , float output_data[TEST_DAT
   }
   Serial.print("])");
 }
-void printResult_trainingData(float trainY[DATASETS] , float output_data[DATASETS]){ 
+void printResult_trainingData(float trainY[DATASETS] , float output_data[DATASETS]){
   Serial.println("");
   Serial.print("y_train = [");
   Serial.print(trainY[0]);
